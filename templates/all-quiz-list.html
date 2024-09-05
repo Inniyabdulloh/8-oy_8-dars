@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="main-content" style="min-height: 608px;">
+    <section class="section">
+      <div class="section-body">
+        <div class="row">
+        {% for quiz in quizes %}
+          <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+            <article class="article">
+              <div class="article-header">
+                <div class="article-image" data-background="{{quiz.img}}">
+                </div>
+              </div>
+              <div class="article-details">
+                <p>{{quiz.name}} </p>
+                <div class="article-cta">
+                  <a href="{% url 'quiz_detail' quiz.id %}" class="btn btn-primary">Batafsil</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+    </section>
+
+  </div>
+{% endblock %}

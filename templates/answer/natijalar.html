@@ -34,14 +34,14 @@
                         {% for result in result_list %}
                         <tr>
                          <td>{{ forloop.counter }}</td>
-                          <td>{{ result.name }}</td>
-                          <td>{{ result.options_count }}</td>
-                          <td>{{ result.correct_option_count}}</td>
-                          <td>{{ result.uncorrect_option_count }}</td>
+                          <td>{{ result.quiz.name }}</td>
+                          <td>{{ result.quiz.questions_count }}</td>
+                          <td>{{ result.correct_options_count}}</td>
+                          <td>{{ result.wrong_options_count }}</td>
                           <td>
-                            <button class="btn btn-succes"><i class="fas fa-arrow-circle-right"></i></button>
+                            <a href="{% url 'resultDetail' result.quiz.id %}" class="btn btn-succes"><i class="fas fa-arrow-circle-right"></i></a>
                           </td>
-                          <td><a href="#" class="btn btn-primary">Detail</a></td>
+
                         </tr>
                         {% endfor %}
                       </table>

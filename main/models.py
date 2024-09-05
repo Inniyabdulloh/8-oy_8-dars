@@ -14,11 +14,19 @@ class Quiz(models.Model):
     @property
     def questions(self):
         return Question.objects.filter(quiz=self)
-    
+
+    @property
+    def count_followers(self):
+        return Answer.objects.filter(quiz=self).count
+
+
     @property
     def questions_count(self):
-        return Question.objects.filter(quiz=self).count()\
+        return Question.objects.filter(quiz=self).count()
 
+    @property
+    def quiz(self):
+        return Question.objects.filter(quiz=self)
 
 class Question(models.Model):
     name = models.CharField(max_length=255)
@@ -71,6 +79,25 @@ class Answer(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
     is_late = models.BooleanField(null=True, blank=True)
+
+
+    @property
+    def correct_options_count(self):
+        count = 0
+        for answer in AnswerDetail.objects.filter(answer=self):
+            if answer.is_correct:
+                count += 1
+        return count
+
+
+    @property
+    def questions(self):
+        return Question.objects.filter(quiz=self.quiz)
+
+
+    @property
+    def wrong_options_count(self):
+        return self.quiz.questions_count - self.correct_options_count
 
     def __str__(self):
         return f"{self.author.username} -> {self.quiz.name}"

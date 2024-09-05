@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'auth.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <div class="wrapper">
+    <form action="{% url 'register' %}" method="POST">
+        {% csrf_token %}
+        <h1>Register</h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="input-box">
+            <input class="alert alert-{{message.tags}}" type="text" readonly value="{{ message }}">
+        </div>
+         {% endfor %}
+        {% endif %}
+        <div class="input-box">
+            <input name="username" type="text" placeholder="Username" required>
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+            <input name="password" type="password" placeholder="Password" required>
+            <i class='bx bxs-lock-alt' ></i>
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+        <div class="register-link">
+            <p>You have an account?
+                <a href="{% url 'login' %}">Login</a>
+            </p>
+        </div>
+    </form>
+    </div>
+</body>
+</html>

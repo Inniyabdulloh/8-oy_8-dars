@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="main-content" style="min-height: 608px;">
+        <section class="section">
+          <div class="section-body">
+
+            <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                  <h4>Savollar</h4>
+
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-striped table-md">
+                      <tbody><tr>
+                        <th>#</th>
+                        <th>Savol</th>
+                        <th>To'g'ri javob</th>
+                        <th>Berilgan javob</th>
+                        <th>Natija</th>
+                      </tr>
+                    {% for answer in result %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ answer.question.name }}</td>
+                        <td>{{ answer.question.correct_option.name }}</td>
+                        <td>{{ answer.user_choice }}</td>
+                        <td>
+                            <i class="{% if question.is_correct %}fas fa-check{% endif %}" style="color:#16f38c;"></i>
+                            <i class="{% if not question.is_correct %}fas fa-question{% endif %}" style="color: #e60f0f;"></i>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </section>
+</div>
+{% endblock %}

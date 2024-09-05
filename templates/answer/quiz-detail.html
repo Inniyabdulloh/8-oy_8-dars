@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="main-content" style="min-height: 608px;">
+    <section class="section">
+      <div class="section-body">
+        <div class="row">
+                <div class="col-12 col-md-6 col-lg-3">
+                  <div class="card card-primary">
+                    <div class="card-header">
+                      <h4>Savol to'plamini nomi</h4>
+                    </div>
+                    <div class="card-body">
+                      <p>{{quiz.name}}</code></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-2 col-lg-2">
+                  <div class="card card-secondary">
+                    <div class="card-header">
+                      <h4>Savollar soni</h4>
+                    </div>
+                    <div class="card-body">
+                      <p>{{quiz.questions_count}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-7 col-lg-4">
+                  <div class="card card-danger">
+                    <div class="card-header">
+                      <h4>Savollar uchun belgilangan vaqt</h4>
+                    </div>
+                    <div class="card-body">
+                      <p>{{quiz.amount}} minut</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                  <div class="card card-dark">
+                    <div class="card-header">
+                      <h4>
+                        {% if quiz.author == request.user %}
+                        <a class="text-decoration-none" href="{% url 'quizListDetail' quiz.id %}">Qatnashuvchilar</a>
+                        {% else %}
+                        Qatnashuvchilar
+                        {% endif %}
+                      </h4>
+                    </div>
+                    <div class="card-body">
+                      <p>{{ quiz.count_followers }}</p>
+                    </div>
+                  </div>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                  <h4>Savollar</h4>
+                  <a href="{% url 'getQuiz' quiz.id %}" class="btn btn-success text-end">Qatnashish</a>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-striped table-md">
+                      <tbody><tr>
+                        <th>#</th>
+                        <th>Savol</th>
+                      </tr>
+                    {% for question in quiz.questions %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{question.name}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody></table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </section>
+
+  </div>
+{% endblock %}

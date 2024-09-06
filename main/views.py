@@ -1,3 +1,6 @@
+import os
+import openpyxl
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from . import models
 from random import choice, sample
@@ -59,8 +62,39 @@ def quizDetail(request, id):
 def quizListDetail(request, id):
     quiz = models.Quiz.objects.get(id=id)
     answers = models.Answer.objects.filter(quiz=quiz)
-    return render(request, 'quiz-list-detail.html', {'answers': answers})
+    return render(request, 'quiz-list-detail.html', {'answers': answers, 'id': id})
 
+
+def quizListDetailExcel(request, id):
+    quiz = models.Quiz.objects.get(id=id)
+    answer = models.Answer.objects.get(quiz=quiz)
+    answers = models.AnswerDetail.objects.filter(answer=answer)
+    book = openpyxl.Workbook()
+    sheet = book.active
+
+    # Birinchi qator: sarlavhalar
+    headers = ['Username', "to'g'ri javoblar", 'xato javoblar']
+    for col_num, header in enumerate(headers, 1):
+        sheet.cell(row=1, column=col_num).value = header
+
+    # Ma'lumotlarni yozish
+    for row_num, detail in enumerate(answers, start=2):
+        sheet.cell(row=row_num, column=1).value = detail.answer.author.username
+        sheet.cell(row=row_num, column=2).value = detail.answer.correct_options_count
+        sheet.cell(row=row_num, column=3).value = detail.answer.wrong_options_count
+
+    file_path = f"answer__details.xlsx"
+    book.save(file_path)
+
+    # Faylni ochib, HTTP responsega yuborish
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
+
+    # Yaratilgan faylni o'chirish
+    os.remove(file_path)
+
+    return response
 
 def questionDelete(request, id, pk):
     models.Question.objects.get(id=id).delete()
@@ -121,3 +155,4 @@ def answerDetail(request, id):
     answer = models.Answer.objects.get(id=id)
     answers = models.AnswerDetail.objects.filter(answer=answer)
     return render(request, 'answer-detail.html', {'result': answers})
+    

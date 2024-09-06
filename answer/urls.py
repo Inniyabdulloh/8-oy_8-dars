@@ -7,4 +7,5 @@ urlpatterns = [
     path('make-answer/<int:id>/', views.makeAnswer, name='makeAnswer'),
     path('results/', views.results, name='results'),
     path('result-detail/<int:id>/', views.result_detail, name='resultDetail'),
+    path('result-deatil-excel/<int:id>/', views.answerDetailExcel, name='resultDetailExcel'),
 ]

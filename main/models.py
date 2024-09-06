@@ -1,3 +1,6 @@
+import os
+from django.shortcuts import get_object_or_404
+import openpyxl
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -103,11 +106,36 @@ class Answer(models.Model):
         return f"{self.author.username} -> {self.quiz.name}"
     
     def save(self, *args, **kwargs):
-        # time = self.end_time-self.start_time
-        # self.is_late = time.total_seconds() / 60 <= self.quiz.amount
         super(Answer, self).save(*args, **kwargs)
 
+    @staticmethod
+    def export_to_excel(answer_id):
+        # Answer modelidan id ga mos objectni olish
+        answer = get_object_or_404(Answer, id=answer_id)
 
+        # AnswerDetail modelidan javobga tegishli barcha detallarning QuerySetini olish
+        answer_details = AnswerDetail.objects.filter(answer=answer)
+
+        # Excel faylini yaratish
+        book = openpyxl.Workbook()
+        sheet = book.active
+
+        # Birinchi qator: sarlavhalar
+        headers = ['Question', 'User Choice', 'Is Correct']
+        for col_num, header in enumerate(headers, 1):
+            sheet.cell(row=1, column=col_num).value = header
+
+        # Ma'lumotlarni yozish
+        for row_num, detail in enumerate(answer_details, start=2):
+            sheet.cell(row=row_num, column=1).value = detail.question.name
+            sheet.cell(row=row_num, column=2).value = detail.user_choice.name
+            sheet.cell(row=row_num, column=3).value = 'Yes' if detail.is_correct else 'No'
+
+        # Faylni saqlash uchun yo'l
+        file_path = f"answer_{answer_id}_details.xlsx"
+        book.save(file_path)
+
+        return file_path
 class AnswerDetail(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -120,3 +148,5 @@ class AnswerDetail(models.Model):
     @property
     def is_correct(self):
         return self.user_choice == self.question.correct_option
+    
+   

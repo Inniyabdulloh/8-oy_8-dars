@@ -39,7 +39,7 @@
                     <div class="card-header">
                       <h4>
                         {% if quiz.author == request.user %}
-                        <a class="text-decoration-none" href="{% url 'quizListDetail' quiz.id %}">Qatnashuvchilar</a>
+                        <a class="text-decoration-none text-black" href="{% url 'quizListDetail' quiz.id %}">Qatnashuvchilar</a>
                         {% else %}
                         Qatnashuvchilar
                         {% endif %}
